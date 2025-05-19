@@ -1,0 +1,24 @@
+body
+{
+	font-family: Arial, sans-serif;
+	color: white;
+	background: #020024;
+	background: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(88, 17, 150, 1) 35%, rgba(201, 123, 237, 1) 100%);
+}
+
+#loginDiv
+{
+	max-width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#titleDiv
+{
+	max-width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+}

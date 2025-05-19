@@ -1,5 +1,21 @@
 <html>
+	<head>
+		<title>Meow Manager</title>
+		<script type="text/javascript" src="js/login.js"></script>
+		<link href="css/styles.css" rel="stylesheet">
+		<link rel="icon" href="images/cat-face.png" type="image/png">
+	</head>
 	<body>
-		<h1>WE LOVE COP 4331</h1>
+		<div id="titleDiv">
+			<h1>Meow Manager</h1>
+			<h3>This is a contact manager to keep track of all your furry friends!</h3>
+		</div>
+		<div id="loginDiv">
+			<span id="inner-title">PLEASE LOG IN</span>
+			<input type="text" id="loginName" placeholder="Username"/><br/>
+			<input type="password" id="loginPassword" placeholder="Password"/><br/>
+			<button type="button" id="loginButton" class="buttons" onclick="doLogin();">Log In</button>
+			<span id="loginResult"></span>
+		</div>
 	</body>
 </html>
