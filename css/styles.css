@@ -4,21 +4,52 @@ body
 	color: white;
 	background: #020024;
 	background: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(88, 17, 150, 1) 35%, rgba(201, 123, 237, 1) 100%);
+	text-shadow: -2px 0 rgb(0, 0, 0), 0 2px rgb(0, 0, 0), 2px 0 rgb(0, 0, 0), 0 -2px rgb(0, 0, 0)
+}
+
+#bodyDiv 
+{
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 4px;
 }
 
 #loginDiv
 {
-	max-width: fit-content;
-	margin-left: auto;
-	margin-right: auto;
 	display: flex;
 	flex-direction: column;
+	align-items: center;
 	justify-content: center;
+	gap: 4px;
 }
 
 #titleDiv
 {
-	max-width: fit-content;
-	margin-left: auto;
-	margin-right: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 4px;
+}
+
+#loginName, #loginPassword
+{
+	background-color: black;
+	color: white;
+	height: 30px;
+	width: 300px;
+}
+
+#loginButton 
+{
+	background-color: black;
+	color: white;
+	height: 50px;
+	width: 200px;
+	border: 2px solid white;
+	border-radius: 20px;
+	cursor: pointer;
 }
