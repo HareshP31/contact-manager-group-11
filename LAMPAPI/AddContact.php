@@ -1,0 +1,73 @@
+<?php
+    //  Get incoming JSON data
+    $inData = getRequestInfo();
+
+    $userID = $inData["id"];
+    $firstName = $inData["firstName"];
+    $lastName = $inData["lastName"];
+    $phone = $inData["phone"];
+    $email = $inData["email"];
+
+    //  Establish connection
+    $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
+    if ($conn->connect_error)
+    {
+        returnWithError($conn->connect_error, 500);
+        exit();
+    }
+
+    //  Ensure all fields provided by user
+    if (!isset($inData["id"], $inData["firstName"], $inData["lastName"], $inData["phone"], $inData["email"]))
+    {
+        returnWithError("Missing required field(s).");
+        exit();
+    }
+
+    //  Trim whitespace from user input
+    $firstName = trim($firstName);
+    $lastName = trim($lastName);
+    $phone = trim($phone);
+    $email = trim($email);
+
+    //  Insert new contact
+    $stmt = $conn->prepare("INSERT INTO Contacts (FirstName, LastName, Phone, Email, UserID) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssi", $firstName, $lastName, $phone, $email, $userID);
+
+    if ($stmt->execute())
+    {
+        returnWithInfo("Contact added successfully.");
+    } else {
+        returnWithError("Error inserting contact: " . $stmt->error);
+    }
+
+    //  Close mysql connection
+    $stmt->close();
+    $conn->close();
+
+
+    // --- Helper functions ---
+    function getRequestInfo()
+    {
+        return json_decode(file_get_contents('php://input'), true);
+    }
+
+    function sendResultInfoAsJson($obj)
+    {
+        header('Content-type: application/json');
+        echo $obj;
+    }
+
+    function returnWithError($err, $statusCode = 400)
+    {
+        http_response_code($statusCode); // default 400 for errors
+        $retValue = '{"error":"' . $err . '"}';
+        sendResultInfoAsJson($retValue);
+    }
+
+    function returnWithInfo($msg)
+    {
+        http_response_code(200); // 200 for success
+        $retValue = '{"message":"' . $msg . '","error":""}';
+        sendResultInfoAsJson($retValue);
+    }
+?>
