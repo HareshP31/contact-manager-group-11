@@ -13,7 +13,7 @@
     $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
     if ($conn->connect_error)
     {
-        returnWithError($conn->connect_error, 500);
+        returnWithError("Database connection failed: " . $conn->connect_error, 500);
         exit();
     }
 
@@ -29,8 +29,11 @@
 
     if ($stmt->execute())
     {
-        returnWithInfo("Contact added successfully.");
-    } else {
+        $newContactId = $stmt->insert_id;
+        returnWithInfo(["id" => $newContactId]);
+    }
+    else
+    {
         returnWithError("Error inserting contact: " . $stmt->error);
     }
 
@@ -54,14 +57,12 @@
     function returnWithError($err, $statusCode = 400)
     {
         http_response_code($statusCode); // default 400 for errors
-        $retValue = '{"error":"' . $err . '"}';
-        sendResultInfoAsJson($retValue);
+        sendResultInfoAsJson(json_encode(["error" => $err]));
     }
 
-    function returnWithInfo($msg)
+    function returnWithInfo($data)
     {
         http_response_code(200); // 200 for success
-        $retValue = '{"message":"' . $msg . '","error":""}';
-        sendResultInfoAsJson($retValue);
-    }
+        sendResultInfoAsJson(json_encode($data));
+    }   
 ?>

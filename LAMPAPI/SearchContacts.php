@@ -19,7 +19,7 @@
     }
 
     //  Build query dynamically based on which search fields are provided
-    $sql = "SELECT FirstName, LastName, Phone, Email FROM Contacts WHERE UserID = ?";
+    $sql = "SELECT FirstName, LastName, Phone, Email, ID FROM Contacts WHERE UserID = ?";
     $params = [$userID];
     $types = "i";
 
