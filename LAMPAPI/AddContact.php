@@ -3,10 +3,11 @@
     $inData = getRequestInfo();
 
     $userID = $inData["id"];
-    $firstName = $inData["firstName"];
-    $lastName = $inData["lastName"];
-    $phone = $inData["phone"];
-    $email = $inData["email"];
+    //  Trim whitespace from user input
+    $firstName = trim($inData["firstName"]);
+    $lastName = trim($inData["lastName"]);
+    $phone = trim($inData["phone"]);
+    $email = trim($inData["email"]);
 
     //  Establish connection
     $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
@@ -16,18 +17,11 @@
         exit();
     }
 
-    //  Ensure all fields provided by user
-    if (!isset($inData["id"], $inData["firstName"], $inData["lastName"], $inData["phone"], $inData["email"]))
-    {
-        returnWithError("Missing required field(s).");
+    //  Ensure required fields are not empty (firstName, lastName)
+    if ($firstName === "" || $lastName === "") {
+        returnWithError("Missing required field(s)");
         exit();
     }
-
-    //  Trim whitespace from user input
-    $firstName = trim($firstName);
-    $lastName = trim($lastName);
-    $phone = trim($phone);
-    $email = trim($email);
 
     //  Insert new contact
     $stmt = $conn->prepare("INSERT INTO Contacts (FirstName, LastName, Phone, Email, UserID) VALUES (?, ?, ?, ?, ?)");
