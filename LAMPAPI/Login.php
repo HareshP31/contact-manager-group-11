@@ -28,20 +28,13 @@
 		$stmt->execute();
 		$result = $stmt->get_result();
 
-		if( $row = $result->fetch_assoc()  )
+		if ($row = $result->fetch_assoc())
 		{
-			if($row["Password"] === $inData["password"])
-			{
-				returnWithInfo( $row['FirstName'], $row['LastName'], $row['ID'] );
-			}
-			else
-			{
-				returnWithError("Password is incorrect.");
-			}
+			returnWithInfo($row['FirstName'], $row['LastName'], $row['ID']);
 		}
 		else
 		{
-			returnWithError("Username does not exist.");
+			returnWithError("Incorrect username or password.");
 		}
 
 		$stmt->close();
