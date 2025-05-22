@@ -5,10 +5,96 @@
 		<link href="css/styles.css" rel="stylesheet">
 		<link rel="icon" href="images/cat-face.png" type="image/png">
         <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', function() 
-        {
-            readCookie();
-        }, false);
+            document.addEventListener('DOMContentLoaded', function() 
+            {
+                readCookie();
+                fetchContacts();
+            });
+
+            function fetchContacts() {
+                const userId = getUserIdFromCookie();
+                if (!userId) {
+                    alert("You must be logged in.");
+                    return;
+                }
+
+                const payload = JSON.stringify({
+                    id: userId,
+                    limit: 10
+                });
+
+                fetch("FetchContacts.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: payload
+                })
+                .then(response => {
+                    if (response.status === 204) {
+                        return [];
+                    }
+                    if (!response.ok)
+                    {
+                        throw new Error("HTTP status " + response.status);
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    if (!text) return []; 
+                    return JSON.parse(text); 
+                })
+                .then(data => {
+                    if (data.error) {
+                        alert("Error: " + data.error);
+                    } else {
+                        populateContactsTable(data);
+                    }
+                })
+                .catch(error => {
+                    console.error("Fetch error:", error);
+                });
+            }
+
+            function getUserIdFromCookie() {
+                let userId = -1;
+                const cookies = document.cookie.split(";");
+                for (let i=0; i<cookies.length;i++)
+                {
+                    let cookie = cookies[i].trim();
+                    let tokens = cookie.split("=");
+                    if(tokens.length !== 2) continue;
+                    if(tokens[0] === "userId")
+                    {
+                        userId = parseInt(tokens[1]);
+                        break;
+                    }
+                }
+                return userId >= 0 ? userId : null;
+            }
+
+            function populateContactsTable(contacts) {
+                const tableBody = document.getElementById("contactsTableBody");
+                tableBody.innerHTML = "";
+
+                if (contacts.length === 0) {
+                    tableBody.innerHTML = "<tr><td colspan='4'>No contacts found.</td></tr>";
+                    return;
+                }
+
+                for (const contact of contacts) {
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${contact.FirstName}</td>
+                        <td>${contact.LastName}</td>
+                        <td>${contact.Phone}</td>
+                        <td>${contact.Email}</td>
+                    `;
+
+                    tableBody.appendChild(row);
+                }
+            }
         </script>
 	</head>
 	<body>
@@ -16,6 +102,21 @@
             <button type="button" id="loginButton" class="buttons" onclick="doLogout();">LOGOUT</button>
             <h2 id="userName"></h2>
             <h1>YOU ARE LOGGED IN</h1>
+
+            <h2>Your Contacts</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody id="contactsTableBody">
+
+                </tbody>
+            </table>
         </div>
 	</body>
 </html>
