@@ -9,17 +9,17 @@
     $phone = trim($inData["phone"]);
     $email = trim($inData["email"]);
 
+    //  Ensure required fields are not empty (firstName, lastName)
+    if ($firstName === "" || $lastName === "") {
+        returnWithError("Missing required field(s)");
+        exit();
+    }
+    
     //  Establish connection
     $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
     if ($conn->connect_error)
     {
         returnWithError("Database connection failed: " . $conn->connect_error, 500);
-        exit();
-    }
-
-    //  Ensure required fields are not empty (firstName, lastName)
-    if ($firstName === "" || $lastName === "") {
-        returnWithError("Missing required field(s)");
         exit();
     }
 
