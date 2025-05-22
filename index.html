@@ -6,6 +6,19 @@
 		<link rel="icon" href="images/cat-face.png" type="image/png">
 	</head>
 	<body>
-		<h1>WE LOVE COP 4331</h1>
+			<div id="bodyDiv">
+			<div id="titleDiv">
+				<h1>Meow Manager</h1>
+				<h2>Welcome!</h2>
+				<h2>Login/Register to keep track of your furry friends!</h2>
+			</div>
+			<div id="loginDiv">
+				<input required type="text" id="loginName" placeholder="Username"/><br/>
+				<input required type="password" id="loginPassword" placeholder="Password"/><br/>
+				<button type="button" id="loginButton" class="buttons" onclick="doLogin();">LOGIN</button>
+				<span id="loginResult"></span>
+			</div>
+		</div>
+
 	</body>
 </html>
