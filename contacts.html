@@ -1,0 +1,21 @@
+<html>
+	<head>
+		<title>Meow Manager</title>
+		<script type="text/javascript" src="js/login.js"></script>
+		<link href="css/styles.css" rel="stylesheet">
+		<link rel="icon" href="images/cat-face.png" type="image/png">
+        <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() 
+        {
+            readCookie();
+        }, false);
+        </script>
+	</head>
+	<body>
+        <div id="bodyDiv">
+            <button type="button" id="loginButton" class="buttons" onclick="doLogout();">LOGOUT</button>
+            <h2 id="userName"></h2>
+            <h1>YOU ARE LOGGED IN</h1>
+        </div>
+	</body>
+</html>
