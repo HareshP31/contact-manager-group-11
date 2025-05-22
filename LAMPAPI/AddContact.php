@@ -10,11 +10,12 @@
     $email = trim($inData["email"]);
 
     //  Ensure required fields are not empty (firstName, lastName)
-    if ($firstName === "" || $lastName === "") {
+    if ($firstName === "" || $lastName === "")
+    {
         returnWithError("Missing required field(s)");
         exit();
     }
-    
+
     //  Establish connection
     $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
     if ($conn->connect_error)
