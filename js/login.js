@@ -17,6 +17,12 @@ function doLogin()
 	
 	document.getElementById("loginResult").innerHTML = "";
 
+	if(login === "" || password === "")
+	{
+		document.getElementById("loginResult").innerHTML = "Please fill in both fields.";
+		return;
+	}
+
 	let tmp = {login:login,password:password};
 //	var tmp = {login:login,password:hash};
 	let jsonPayload = JSON.stringify( tmp );
@@ -37,7 +43,7 @@ function doLogin()
 		
 				if( userId < 1 )
 				{		
-					document.getElementById("loginResult").innerHTML = "Username or Password is incorrect";
+					document.getElementById("loginResult").innerHTML = jsonObject.error || "Login failed.";
 					return;
 				}
 		
@@ -111,4 +117,80 @@ function doLogout()
 	firstName = "";
 	lastName = "";
 	window.location.href = "index.html";
+}
+
+window.onload = function () 
+{
+	showForm('login');
+};
+
+function showForm(form)
+{
+	const loginTab = document.getElementById("loginTab");
+	const registerTab = document.getElementById("registerTab");
+	const loginDiv = document.getElementById("loginDiv");
+	const registerDiv = document.getElementById("registerDiv");
+
+	if(form === "login")
+	{
+		loginTab.classList.add("active");
+		registerTab.classList.remove("active");
+		loginDiv.style.display = "block";
+		registerDiv.style.display = "none";
+	}
+	else
+	{
+		registerTab.classList.add("active");
+		loginTab.classList.remove("active");
+		registerDiv.style.display = "block";
+		loginDiv.style.display = "none";
+	}
+}
+
+function doRegister()
+{
+	let firstName = document.getElementById("firstName").value;
+	let lastName = document.getElementById("lastName").value;
+	let login = document.getElementById("registerName").value;
+	let password = document.getElementById("registerPassword").value;
+
+	if(firstName === "" || lastName === "" || login === "" || password === "")
+	{
+		document.getElementById("registerResult").innerHTML = "Please fill in all fields.";
+		return;
+	}
+
+	let tmp = { firstName, lastName, login, password };
+	let jsonPayload = JSON.stringify(tmp);
+
+	let url = urlBase + '/Register.' + extension;
+
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+	try
+	{
+		xhr.onreadystatechange = function () 
+		{
+			if(this.readyState == 4 && this.status == 200)
+			{
+				let response = JSON.parse(xhr.responseText);
+				if(response.error)
+				{
+					document.getElementById("registerResult").innerHTML = response.error;
+				}
+				else
+				{
+					document.getElementById("registerResult").innerHTML = "Registration successful! Please log in.";
+					showForm("login");
+				}
+			}
+		};
+		xhr.send(jsonPayload);
+	}
+	catch (err)
+	{
+		document.getElementById("registerResult").innerHTML = err.message;
+	}
 }

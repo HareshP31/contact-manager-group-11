@@ -30,11 +30,18 @@
 
 		if( $row = $result->fetch_assoc()  )
 		{
-			returnWithInfo( $row['FirstName'], $row['LastName'], $row['ID'] );
+			if($row["Password"] === $inData["password"])
+			{
+				returnWithInfo( $row['FirstName'], $row['LastName'], $row['ID'] );
+			}
+			else
+			{
+				returnWithError("Password is incorrect.");
+			}
 		}
 		else
 		{
-			returnWithError("No Records Found");
+			returnWithError("Username does not exist.");
 		}
 
 		$stmt->close();

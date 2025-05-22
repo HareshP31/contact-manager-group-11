@@ -4,26 +4,39 @@ body
 	color: white;
 	background: #020024;
 	background: linear-gradient(90deg,rgba(2, 0, 36, 1) 0%, rgba(88, 17, 150, 1) 35%, rgba(201, 123, 237, 1) 100%);
-	text-shadow: -2px 0 rgb(0, 0, 0), 0 2px rgb(0, 0, 0), 2px 0 rgb(0, 0, 0), 0 -2px rgb(0, 0, 0)
+	text-shadow: -2px 0 rgb(0, 0, 0), 0 2px rgb(0, 0, 0), 2px 0 rgb(0, 0, 0), 0 -2px rgb(0, 0, 0);
 }
 
 #bodyDiv 
 {
-	height: 100vh;
+	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 	gap: 4px;
 }
 
-#loginDiv
-{
+.form-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.form-row p {
+	width: 100px;
+	padding: 20px;
+	text-align: right;
+	margin: 0;
+}
+
+.form-column {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
-	gap: 4px;
+	gap: 10px;
+	margin-bottom: 10px;
 }
 
 #titleDiv
@@ -35,7 +48,7 @@ body
 	gap: 4px;
 }
 
-#loginName, #loginPassword
+#loginName, #loginPassword, #firstName, #lastName, #registerName, #registerPassword
 {
 	background-color: black;
 	color: white;
@@ -43,7 +56,7 @@ body
 	width: 300px;
 }
 
-#loginButton 
+.buttons
 {
 	background-color: black;
 	color: white;
@@ -52,4 +65,33 @@ body
 	border: 2px solid white;
 	border-radius: 20px;
 	cursor: pointer;
+}
+
+#formToggle 
+{
+	display: flex;
+	width: 250px;
+	margin: 20px auto;
+	border: 2px white solid;
+	border-radius: 25px;
+	overflow: hidden;
+	cursor: pointer;
+	font-weight: bold;
+	text-shadow: none;
+}
+
+.form-tab 
+{
+	flex: 1;
+	text-align: center;
+	padding: 10px;
+	background-color: white;
+	color: black;
+	transition: background-color 0.5s;
+}
+
+.form-tab.active
+{
+	background-color: black;
+	color: white;
 }

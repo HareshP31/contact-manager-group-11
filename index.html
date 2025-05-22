@@ -12,13 +12,48 @@
 				<h2>Welcome!</h2>
 				<h2>Login/Register to keep track of your furry friends!🐈🐈‍⬛</h2>
 			</div>
+			
+			<div id="formToggle">
+				<div id="loginTab" class="form-tab active" onclick="showForm('login')">Login</div>
+				<div id="registerTab" class="form-tab" onclick="showForm('register')">Register</div>
+			</div>
+
 			<div id="loginDiv">
-				<p>Username</p>
-				<input required type="text" id="loginName" placeholder="Enter username here..."/><br/>
-				<p>Password</p>
-				<input required type="password" id="loginPassword" placeholder="Enter password here..."/><br/>
-				<button type="button" id="loginButton" class="buttons" onclick="doLogin();">LOGIN</button>
-				<span id="loginResult"></span>
+				<div class="form-row">
+					<p>Username:</p>
+					<input required type="text" id="loginName" placeholder="Enter username here..."/>
+				</div>
+				<div class="form-row">
+					<p>Password:</p>
+					<input required type="password" id="loginPassword" placeholder="Enter password here..."/>
+				</div>
+				<div class="form-column">
+					<button type="button" class="buttons" onclick="doLogin();">LOGIN</button>
+					<span id="loginResult"></span>
+				</div>
+			</div>
+
+			<div id="registerDiv">
+				<div class="form-row">
+					<p>First Name:</p>
+					<input required type="text" id="firstName" placeholder="Enter your first name..."/>
+				</div>
+				<div class="form-row">
+					<p>Last Name:</p>
+					<input required type="text" id="lastName" placeholder="Enter your last name..."/>
+				</div>
+				<div class="form-row">
+					<p>Username:</p>
+					<input required type="text" id="registerName" placeholder="Enter a username..."/>
+				</div>
+				<div class="form-row">
+					<p>Password:</p>
+					<input required type="password" id="registerPassword" placeholder="Enter a password..."/>
+				</div>
+				<div class="form-column">
+					<button type="button" class="buttons" onclick="doRegister();">REGISTER</button>
+					<br><span id="registerResult"></span>
+				</div>
 			</div>
 		</div>
 
