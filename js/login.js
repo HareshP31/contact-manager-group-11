@@ -102,7 +102,6 @@ function readCookie()
 	}
 	else
 	{
-        console.log(firstName);
 		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
 	}
 }
@@ -117,11 +116,6 @@ function doLogout()
 	lastName = "";
 	window.location.href = "index.html";
 }
-
-window.onload = function () 
-{
-	showForm('login');
-};
 
 function showForm(form)
 {
@@ -194,3 +188,8 @@ function doRegister()
 		document.getElementById("registerResult").innerHTML = err.message;
 	}
 }
+
+window.onload = function () 
+{
+	showForm('login');
+};
