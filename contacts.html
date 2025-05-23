@@ -1,4 +1,4 @@
-<html>
+<!-- <html>
 	<head>
 		<title>Meow Manager</title>
 		<script type="text/javascript" src="js/login.js"></script>
@@ -119,4 +119,147 @@
             </table>
         </div>
 	</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Meow Manager</title>
+    <link href="css/styles.css" rel="stylesheet">
+    <link rel="icon" href="images/cat-face.png" type="image/png">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            readCookie();
+            fetchContacts();
+        });
+
+        function getUserIdFromCookie() {
+            const cookies = document.cookie.split(";");
+            for (let c of cookies) {
+                const [name, value] = c.trim().split("=");
+                if (name === "userId") return parseInt(value);
+            }
+            return null;
+        }
+
+        function fetchContacts() {
+            const userId = getUserIdFromCookie();
+            if (!userId) return alert("Not logged in.");
+
+            fetch("LAMPAPI/FetchContacts.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: userId, limit: 20 })
+            })
+            .then(res => res.status === 204 ? [] : res.json())
+            .then(data => {
+                if (!Array.isArray(data)) {
+                    console.error("Unexpected response:", data);
+                    return;
+                }
+                populateContactsTable(data);
+            })
+            .catch(err => console.error("Fetch error:", err));
+        }
+
+        function populateContactsTable(contacts) {
+            const tbody = document.getElementById("contactsTableBody");
+            tbody.innerHTML = "";
+            if (!contacts.length) {
+                tbody.innerHTML = "<tr><td colspan='4'>No contacts found.</td></tr>";
+                return;
+            }
+
+            for (const contact of contacts) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${contact.FirstName}</td>
+                    <td>${contact.LastName}</td>
+                    <td>${contact.Phone}</td>
+                    <td>${contact.Email}</td>
+                `;
+                tbody.appendChild(row);
+            }
+        }
+
+        function addContact() {
+            const userId = getUserIdFromCookie();
+            if (!userId) return alert("Not logged in.");
+
+            const firstName = document.getElementById("firstName").value.trim();
+            const lastName = document.getElementById("lastName").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const email = document.getElementById("email").value.trim();
+
+            if (!firstName || !lastName) {
+                document.getElementById("contactResult").innerText = "First and last name required.";
+                return;
+            }
+
+            const payload = {
+                id: userId,
+                firstName,
+                lastName,
+                phone,
+                email
+            };
+
+            fetch("LAMPAPI/AddContact.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById("contactResult").innerText = "Error: " + data.error;
+                    return;
+                }
+                document.getElementById("contactResult").innerText = "Contact added!";
+                document.getElementById("firstName").value = "";
+                document.getElementById("lastName").value = "";
+                document.getElementById("phone").value = "";
+                document.getElementById("email").value = "";
+                fetchContacts();
+            })
+            .catch(err => {
+                console.error("Add contact error:", err);
+                document.getElementById("contactResult").innerText = "Failed to add contact.";
+            });
+        }
+
+        function readCookie() {
+            const userId = getUserIdFromCookie();
+            if (userId) document.getElementById("userName").innerText = "User ID: " + userId;
+        }
+
+        function doLogout() {
+            document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+            window.location.href = "index.html";
+        }
+    </script>
+</head>
+<body>
+    <button id="loginButton" onclick="doLogout()">Logout</button>
+    <h2 id="userName"></h2>
+    <h1>Welcome to Meow Manager</h1>
+
+    <h3>Add Contact</h3>
+    <input type="text" id="firstName" placeholder="First Name">
+    <input type="text" id="lastName" placeholder="Last Name">
+    <input type="text" id="phone" placeholder="Phone">
+    <input type="text" id="email" placeholder="Email">
+    <button onclick="addContact()">Add Contact</button>
+    <p id="contactResult"></p>
+
+    <h3>Your Contacts</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>First</th><th>Last</th><th>Phone</th><th>Email</th>
+            </tr>
+        </thead>
+        <tbody id="contactsTableBody"></tbody>
+    </table>
+</body>
 </html>
