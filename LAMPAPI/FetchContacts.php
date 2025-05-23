@@ -1,4 +1,9 @@
 <?php
+    // REMOVE AFTER TESTING
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: Content-Type");
+    header("Access-Control-Allow-Methods: POST, OPTIONS");
+
     define("LIMIT", 10); //  Max. contacts to fetch
     
     //  Get incoming JSON data
