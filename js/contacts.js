@@ -91,7 +91,7 @@ function updateContact(id) {
         email: document.getElementById(`em-${id}`).value
     };
 
-    fetch(`${urlBase}/UpdateContact.${extension}`, {
+    fetch(`${urlBase}/EditContact.${extension}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updated)
@@ -100,7 +100,7 @@ function updateContact(id) {
 }
 
 function deleteContact(id) {
-    fetch(`${urlBase}/DeleteContact.${extension}`, {
+    fetch(`${urlBase}/RemoveContact.${extension}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id })
