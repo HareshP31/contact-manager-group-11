@@ -5,155 +5,7 @@
         <script type="text/javascript" src="js/contacts.js"></script>
 		<link href="css/styles.css" rel="stylesheet">
 		<link rel="icon" href="images/cat-face.png" type="image/png">
-        <script type="text/javascript">
-            document.addEventListener('DOMContentLoaded', function() 
-            {
-                readCookie();
-                fetchContacts();
-            });
-
-            function fetchContacts() {
-                const userId = getUserIdFromCookie();
-                if (!userId) {
-                    alert("You must be logged in.");
-                    return;
-                }
-
-                const payload = JSON.stringify({
-                    id: userId,
-                    limit: 10
-                });
-
-                fetch("https://meowmanager4331.xyz/LAMPAPI/FetchContacts.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: payload
-                })
-                .then(response => {
-                    if (response.status === 204) {
-                        return [];
-                    }
-                    if (!response.ok)
-                    {
-                        throw new Error("HTTP status " + response.status);
-                    }
-                    return response.text();
-                })
-                .then(text => {
-                    if (!text) return []; 
-                    return JSON.parse(text); 
-                })
-                .then(data => {
-                    if (data.error) {
-                        alert("Error: " + data.error);
-                    } else {
-                        populateContactsTable(data);
-                    }
-                })
-                .catch(error => {
-                    console.error("Fetch error:", error);
-                });
-            }
-
-            function getUserIdFromCookie() {
-                let userId = -1;
-                const cookies = document.cookie.split(";");
-                for (let i=0; i<cookies.length;i++)
-                {
-                    let cookie = cookies[i].trim();
-                    let tokens = cookie.split("=");
-                    if(tokens.length !== 2) continue;
-                    if(tokens[0] === "userId")
-                    {
-                        userId = parseInt(tokens[1]);
-                        break;
-                    }
-                }
-                return userId >= 0 ? userId : null;
-            }
-
-            function populateContactsTable(contacts) {
-                const tableBody = document.getElementById("contactsTableBody");
-                tableBody.innerHTML = "";
-
-                if (contacts.length === 0) {
-                    tableBody.innerHTML = "<tr><td colspan='4'>No contacts found.</td></tr>";
-                    return;
-                }
-
-                for (const contact of contacts) {
-                    const row = document.createElement("tr");
-
-                    row.innerHTML = `
-                        <td>${contact.FirstName}</td>
-                        <td>${contact.LastName}</td>
-                        <td>${contact.Phone}</td>
-                        <td>${contact.Email}</td>
-                    `;
-
-                    tableBody.appendChild(row);
-                }
-            }
-
-            function addContacts() {
-    const userId = getUserIdFromCookie();
-    if (!userId) {
-        alert("You must be logged in.");
-        return;
-    }
-
-    // Collect input values
-    const firstName = document.getElementById("firstName").value.trim();
-    const lastName = document.getElementById("lastName").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const email = document.getElementById("email").value.trim();
-
-    // Makes all fields required
- if(firstName === "" || lastName === "" || phone === "" || email === "")
-	{
-		document.getElementById("registerResult").innerHTML = "Please fill in all fields.";
-		return;
-	}
-
-    const payload = JSON.stringify({
-        id: userId,
-        firstName: firstName,
-        lastName: lastName,
-        phone: phone,
-        email: email
-    });
-
-    fetch("https://meowmanager4331.xyz/LAMPAPI/AddContact.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: payload
-    })
-    .then(response => response.text())
-    .then(text => {
-        const data = JSON.parse(text);
-        if (data.error) {
-            alert("Error: " + data.error);
-        } else {
-            alert("Contact added successfully!");
-            fetchContacts(); // Refresh the list
-        }
-    })
-    .catch(error => {
-        console.error("Add contact error:", error);
-    });
-
-    document.getElementById("firstName").value = "";
-    document.getElementById("lastName").value = "";
-    document.getElementById("phone").value = "";
-    document.getElementById("email").value = "";
-
-}
-
-        </script>
+   
 	</head>
 	<body>
         <div id="bodyDiv">
@@ -161,19 +13,59 @@
             <h2 id="userName"></h2>
             <h1>YOU ARE LOGGED IN</h1>
 
-           <h2>Add New Contact</h2>
-          
+           
+
+<button type="button" class="buttons" id="toggleFormButton" 
+        style="margin-bottom: 15px;">Show Add Contact Form</button>
+
+
+        <div id="addContactFormContainer" style="display: none;">
+
+    <h2>Add New Contact</h2>
+
     <form id="addContactForm">
-    <input type="text" id="firstName" placeholder="First Name" required>
-    <input type="text" id="lastName" placeholder="Last Name" required>
-    <input type="text" id="phone" placeholder="Phone" required>
-    <input type="email" id="email" placeholder="Email" required>
-    <button type="button" onclick="addContacts();">Add New Contact</button>
-</form> 
+            <div id="registerDiv">
+				<div class="form-row">
+					<p>First Name:</p>
+					<input type="text" id="firstName" placeholder="First Name" required>
+				</div>
+				<div class="form-row">
+					<p>Last Name:</p>
+					<input type="text" id="lastName" placeholder="Last Name" required>
+				</div>
+				<div class="form-row">
+					<p>Username:</p>
+					<input type="text" id="phone" placeholder="Phone" required>
+				</div>
+				<div class="form-row">
+					<p>Password:</p>
+					<input type="email" id="email" placeholder="Email" required>
+				</div>
+				<div class="form-column">
+					<button type="button" class="buttons" onclick="addContacts();">Add New Contact</button>
+					
+				</div>
+			</div>
+    </form> 
+</div>
 
 
 
-            <h2>Your Contacts</h2>
+
+
+    <br> 
+    <h2>Your Contacts</h2>
+    <div class="form-row">
+    <input type="text" id="searchText" placeholder="Search Contacts..." />
+    <button type="button" id="searchButton" onclick="searchContacts();">Search Contact</button>
+    </div>
+    <span id="searchResult"></span>
+    <p id="contactList"></p>
+
+
+
+
+           
             <table border="1">
                 <thead>
                     <tr>
@@ -191,41 +83,3 @@
 	</body>
 </html> 
 
-<!--
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Meow Manager - Contacts</title>
-    <script type="text/javascript" src="js/contacts.js"></script>
-    <link href="css/styles.css" rel="stylesheet">
-    <link rel="icon" href="images/cat-face.png" type="image/png">
-</head>
-<body>
-    <div id="bodyDiv">
-        <button type="button" id="logoutButton" class="buttons" onclick="doLogout();">LOGOUT</button>
-        <h2 id="userName"></h2>
-        <h1>Your Contacts</h1>
-
-        <div id="addContactForm">
-            <input type="text" id="firstName" placeholder="First Name">
-            <input type="text" id="lastName" placeholder="Last Name">
-            <input type="text" id="phone" placeholder="Phone">
-            <input type="text" id="email" placeholder="Email">
-            <button onclick="AddContact()">Add Contact</button>
-        </div>
-
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="contactsTableBody"></tbody>
-        </table>
-    </div>
-</body>
-</html>

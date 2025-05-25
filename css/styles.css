@@ -48,7 +48,7 @@ body
 	gap: 4px;
 }
 
-#loginName, #loginPassword, #firstName, #lastName, #registerName, #registerPassword
+#loginName, #loginPassword, #firstName, #lastName, #phone, #email, #registerName, #registerPassword
 {
 	background-color: black;
 	color: white;
@@ -95,3 +95,17 @@ body
 	background-color: black;
 	color: white;
 }
+
+/* Add some smooth transition for the form */
+            #addContactFormContainer {
+                transition: all 0.3s ease;
+                overflow: hidden;
+            }
+            
+            /* Style for the search section */
+            .search-section {
+                margin: 15px 0;
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
