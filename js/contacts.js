@@ -111,6 +111,8 @@ function populateContactsTable(contacts) {
                 <button id="cancel${c.ID}" style="display:none;">Cancel</button>
                 <button id="delete${c.ID}">Delete</button>
             </td>
+            
+               
         `;
         tbody.appendChild(row);
 
@@ -155,6 +157,31 @@ function saveRow(contact) {
         Email:     document.getElementById("email_in" + id).value.trim()
     };
 
+        if (updated.FirstName === "" || updated.LastName === "" || updated.Phone === "" || updated.Email === "") {
+        document.getElementById("saveError").innerHTML = "Please fill in all fields.";
+        return;
+    }
+
+    const nameCheck = /^[a-zA-Z\s\-']+$/;
+    if (!nameCheck.test(updated.FirstName) || !nameCheck.test(updated.LastName)) {
+        document.getElementById("saveError").innerHTML = "Names can only contain letters, spaces, hyphens, or apostrophes.";
+        return;
+    }
+
+
+    const phoneCheck = /^\d{3}-\d{3}-\d{4}$/;
+    if (!phoneCheck.test(updated.Phone)) {
+        document.getElementById("saveError").innerHTML = "Phone must be in the format 123-456-7890.";
+        return;
+}
+
+
+    const emailCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailCheck.test(updated.Email)) {
+        document.getElementById("saveError").innerHTML = "Invalid email format.";
+        return;
+    }
+
     
     const userId = getUserIdFromCookie();
     fetch("https://meowmanager4331.xyz/LAMPAPI/EditContact.php", {
@@ -174,7 +201,7 @@ function saveRow(contact) {
         if (resData.error) {
             alert("Error: " + resData.error);
         } else {
-           
+           document.getElementById("saveError").innerHTML = null
             Object.assign(contact, updated);
             cancelRow(contact, true);
         }
@@ -236,6 +263,26 @@ function addContacts() {
     
     if (firstName === "" || lastName === "" || phone === "" || email === "") {
         document.getElementById("registerResult").innerHTML = "Please fill in all fields.";
+        return;
+    }
+
+    const nameCheck = /^[a-zA-Z\s\-']+$/;
+    if (!nameCheck.test(firstName) || !nameCheck.test(lastName)) {
+        document.getElementById("registerResult").innerHTML = "Names can only contain letters, spaces, hyphens, or apostrophes.";
+        return;
+    }
+
+
+    const phoneCheck = /^\d{3}-\d{3}-\d{4}$/;
+    if (!phoneCheck.test(phone)) {
+        document.getElementById("registerResult").innerHTML = "Phone must be in the format 123-456-7890.";
+        return;
+}
+
+
+    const emailCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailCheck.test(email)) {
+        document.getElementById("registerResult").innerHTML = "Invalid email format.";
         return;
     }
 
