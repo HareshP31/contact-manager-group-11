@@ -176,6 +176,7 @@ function searchContacts() {
         return;
     }
 
+    let flag = 0;
     let payload = { id: userId };
 
     if (srch.includes("@")) {
@@ -190,6 +191,7 @@ function searchContacts() {
         } else {
             payload.firstName = srch;
             
+            flag = 1;
             //REMOVED LASTNAME SEARCH FOR NOW
         }
     }
@@ -202,6 +204,10 @@ function searchContacts() {
         body: JSON.stringify(payload)
     })
     .then(response => {
+        if ((response.status === 204) && flag == 1) {
+            payload.firstName = null;
+            lastNameCheck()
+        }
         if (response.status === 204) {
             populateContactsTable([]);
             return;
@@ -238,4 +244,72 @@ function toggleAddContactForm() {
         formContainer.style.display = 'none';
         toggleButton.textContent = 'Show Add Contact Form';
     }
+}
+
+function lastNameCheck(){
+        const srch = document.getElementById("searchText").value.trim();
+    const userId = getUserIdFromCookie();
+    
+    if (!userId) {
+        alert("You must be logged in.");
+        return;
+    }
+
+    let flag = 0;
+    let payload = { id: userId };
+
+    if (srch.includes("@")) {
+        payload.email = srch;
+    } else if (/^[\d\-\+\(\)\s]+$/.test(srch)) {
+        payload.phone = srch;
+    } else {
+        const words = srch.split(" ").filter(word => word.trim() !== "");
+        if (words.length === 2) {
+            payload.firstName = words[0];
+            payload.lastName = words[1];
+        } else {
+            payload.lastName = srch;
+           
+        }
+    }
+
+    do {
+    fetch("https://meowmanager4331.xyz/LAMPAPI/SearchContacts.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if ((response.status === 204) && flag == 1) {
+            payload.firstName = null;
+            payload.lastName = lastName;
+           
+        }
+        if (response.status === 204) {
+            populateContactsTable([]);
+            return;
+        }
+        if (!response.ok) {
+            throw new Error("HTTP status " + response.status);
+        }
+        return response.text();
+    })
+    .then(text => {
+        if (!text) return [];
+        return JSON.parse(text);
+    })
+    .then(data => {
+        if (data.error) {
+            alert("Error: " + data.error);
+        } else {
+            populateContactsTable(data);
+        }
+    })
+    .catch(error => {
+        console.error("Search error:", error);
+    });
+    
+    } while (flag == 2)
 }
