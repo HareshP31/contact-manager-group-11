@@ -29,7 +29,7 @@
                             <input type="text" id="lastName" placeholder="Last Name" required>
                         </div>
                         <div class="form-row">
-                            <p>Username:</p>
+                            <p>Phone:</p>
                             <input type="text" id="phone" placeholder="Phone" required>
                         </div>
                         <div class="form-row">
@@ -39,6 +39,10 @@
                         <div class="form-column">
                             <button type="button" class="buttons" onclick="addContacts();">Add New Contact</button>
                         </div>
+                        <div class="form-column">
+                            <span id="registerResult"></span>
+                        </div>
+                        
                     </div>
                 </form> 
             </div>
@@ -59,6 +63,7 @@
                         <th>Last Name</th>
                         <th>Phone</th>
                         <th>Email</th>
+                        <th>Options</th>
                     </tr>
                 </thead>
                 <tbody id="contactsTableBody">

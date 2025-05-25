@@ -18,7 +18,7 @@
     $email = trim($inData["email"]);
 
     //  Ensure required fields are not empty (firstName, lastName)
-    if ($firstName === "" || $lastName === "")
+    if ($firstName === "" || $lastName === "" || $phone === "" || $email === "")
     {
         returnWithError("Missing required field(s)");
         exit();

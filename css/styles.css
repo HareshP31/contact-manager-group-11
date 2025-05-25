@@ -96,16 +96,19 @@ body
 	color: white;
 }
 
-/* Add some smooth transition for the form */
-            #addContactFormContainer {
-                transition: all 0.3s ease;
-                overflow: hidden;
-            }
+
+#addContactFormContainer {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
             
-            /* Style for the search section */
-            .search-section {
-                margin: 15px 0;
-                display: flex;
-                gap: 10px;
-                align-items: center;
-            }
+.search-section {
+    margin: 15px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.edit-btn, .delete-btn {
+	height: 20px;
+}

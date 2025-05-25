@@ -89,26 +89,135 @@ function getUserIdFromCookie() {
 }
 
 function populateContactsTable(contacts) {
-    const tableBody = document.getElementById("contactsTableBody");
-    tableBody.innerHTML = "";
+    const tbody = document.getElementById("contactsTableBody");
+    tbody.innerHTML = "";
 
-    if (contacts.length === 0) {
-        tableBody.innerHTML = "<tr><td colspan='4'>No contacts found.</td></tr>";
+    if (!contacts.length) {
+        tbody.innerHTML = "<tr><td colspan='6'>No contacts found.</td></tr>";
         return;
     }
 
-    for (const contact of contacts) {
+    for (const c of contacts) {
         const row = document.createElement("tr");
-
+        row.id = "row" + c.ID;
         row.innerHTML = `
-            <td>${contact.FirstName}</td>
-            <td>${contact.LastName}</td>
-            <td>${contact.Phone}</td>
-            <td>${contact.Email}</td>
+            <td id="first${c.ID}">${c.FirstName}</td>
+            <td id="last${c.ID}">${c.LastName}</td>
+            <td id="phone${c.ID}">${c.Phone}</td>
+            <td id="email${c.ID}">${c.Email}</td>
+            <td>
+                <button id="edit${c.ID}">Edit</button>
+                <button id="save${c.ID}" style="display:none;">Save</button>
+                <button id="cancel${c.ID}" style="display:none;">Cancel</button>
+                <button id="delete${c.ID}">Delete</button>
+            </td>
         `;
+        tbody.appendChild(row);
 
-        tableBody.appendChild(row);
+        // Wire up buttons
+        document.getElementById("edit"   + c.ID).onclick = () => editRow(c);
+        document.getElementById("save"   + c.ID).onclick = () => saveRow(c);
+        document.getElementById("cancel" + c.ID).onclick = () => cancelRow(c);
+        document.getElementById("delete" + c.ID).onclick = () => deleteContact(c);
     }
+}
+
+
+function editRow(contact) {
+    const id = contact.ID;
+
+    // toggle buttons
+    document.getElementById("edit"   + id).style.display = "none";
+    document.getElementById("save"   + id).style.display = "inline-block";
+    document.getElementById("cancel" + id).style.display = "inline-block";
+
+    // Lets user edit contact's info
+    const firstName = document.getElementById("first" + id),
+          lastName = document.getElementById("last"  + id),
+          phone = document.getElementById("phone" + id),
+          email = document.getElementById("email" + id);
+
+    firstName.innerHTML = `<input type="text" id="first_in${id}" value="${contact.FirstName}">`;
+    lastName.innerHTML = `<input type="text" id="last_in${id}"  value="${contact.LastName}">`;
+    phone.innerHTML = `<input type="text" id="phone_in${id}" value="${contact.Phone}">`;
+    email.innerHTML = `<input type="text" id="email_in${id}" value="${contact.Email}">`;
+}
+
+function saveRow(contact) {
+    const id = contact.ID;
+
+    
+    const updated = {
+        ID:        id,
+        FirstName: document.getElementById("first_in" + id).value.trim(),
+        LastName:  document.getElementById("last_in"  + id).value.trim(),
+        Phone:     document.getElementById("phone_in" + id).value.trim(),
+        Email:     document.getElementById("email_in" + id).value.trim()
+    };
+
+    
+    const userId = getUserIdFromCookie();
+    fetch("https://meowmanager4331.xyz/LAMPAPI/EditContact.php", {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify({
+            id: userId,
+            contactID: updated.ID,
+            firstName: updated.FirstName,
+            lastName:  updated.LastName,
+            phone:     updated.Phone,
+            email:     updated.Email
+        })
+    })
+    .then(res => res.json())
+    .then(resData => {
+        if (resData.error) {
+            alert("Error: " + resData.error);
+        } else {
+           
+            Object.assign(contact, updated);
+            cancelRow(contact, true);
+        }
+    })
+    .catch(err => console.error("Update failed:", err));
+}
+
+function cancelRow(contact, silent = false) {
+    const id = contact.ID;
+
+    // Restore the old contact
+    document.getElementById("first" + id).innerText = contact.FirstName;
+    document.getElementById("last"  + id).innerText = contact.LastName;
+    document.getElementById("phone" + id).innerText = contact.Phone;
+    document.getElementById("email" + id).innerText = contact.Email;
+
+    // toggle buttons
+    document.getElementById("edit"   + id).style.display = "inline-block";
+    document.getElementById("save"   + id).style.display = "none";
+    document.getElementById("cancel" + id).style.display = "none";
+
+   
+}
+
+
+function deleteContact(contact) {
+    if (!confirm(`Delete "${contact.FirstName} ${contact.LastName}"?`)) return;
+
+    const userId = getUserIdFromCookie();
+    fetch("https://meowmanager4331.xyz/LAMPAPI/RemoveContact.php", {
+        method: "POST",
+        headers: { "Content-Type":"application/json" },
+        body: JSON.stringify({ id: userId, contactID: contact.ID })
+    })
+    .then(res => res.json())
+    .then(resData => {
+        if (resData.error) {
+            alert("Error: " + resData.error);
+        } else {
+            fetchContacts();
+        }
+    })
+    .catch(err => console.error("Delete failed:", err));
 }
 
 function addContacts() {
@@ -190,9 +299,7 @@ function searchContacts() {
             payload.lastName = words[1];
         } else {
             payload.firstName = srch;
-            
             flag = 1;
-            //REMOVED LASTNAME SEARCH FOR NOW
         }
     }
 
@@ -244,6 +351,7 @@ function toggleAddContactForm() {
         formContainer.style.display = 'none';
         toggleButton.textContent = 'Show Add Contact Form';
     }
+    document.getElementById("registerResult").innerHTML = null;
 }
 
 function lastNameCheck(){
