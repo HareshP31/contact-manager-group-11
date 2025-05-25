@@ -1,71 +1,57 @@
-    <html>
-	<head>
-		<title>Meow Manager</title>
-		<script type="text/javascript" src="js/login.js"></script>
+<html>
+    <head>
+        <title>Meow Manager</title>
+        <script type="text/javascript" src="js/login.js"></script>
         <script type="text/javascript" src="js/contacts.js"></script>
-		<link href="css/styles.css" rel="stylesheet">
-		<link rel="icon" href="images/cat-face.png" type="image/png">
-   
-	</head>
-	<body>
+        <link href="css/styles.css" rel="stylesheet">
+        <link rel="icon" href="images/cat-face.png" type="image/png">
+    </head>
+    <body>
         <div id="bodyDiv">
             <button type="button" id="loginButton" class="buttons" onclick="doLogout();">LOGOUT</button>
             <h2 id="userName"></h2>
             <h1>YOU ARE LOGGED IN</h1>
 
-           
+            <button type="button" class="buttons" id="toggleFormButton" style="margin-bottom: 15px;">Show Add Contact Form</button>
 
-<button type="button" class="buttons" id="toggleFormButton" 
-        style="margin-bottom: 15px;">Show Add Contact Form</button>
+            <div id="addContactFormContainer" style="display: none;">
+                <div class="form-column">
+                    <h2>Add New Contact</h2>
+                </div>
+                <form id="addContactForm">
+                    <div id="registerDiv">
+                        <div class="form-row">
+                            <p>First Name:</p>
+                            <input type="text" id="firstName" placeholder="First Name" required>
+                        </div>
+                        <div class="form-row">
+                            <p>Last Name:</p>
+                            <input type="text" id="lastName" placeholder="Last Name" required>
+                        </div>
+                        <div class="form-row">
+                            <p>Username:</p>
+                            <input type="text" id="phone" placeholder="Phone" required>
+                        </div>
+                        <div class="form-row">
+                            <p>Password:</p>
+                            <input type="email" id="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-column">
+                            <button type="button" class="buttons" onclick="addContacts();">Add New Contact</button>
+                        </div>
+                    </div>
+                </form> 
+            </div>
 
+            <br> 
+            <h2>Your Contacts</h2>
+            <div class="form-row">
+                <input type="text" id="searchText" placeholder="Search Contacts..." />
+                <button type="button" id="searchButton" onclick="searchContacts();">Search Contact</button>
+            </div>
+            <span id="searchResult"></span>
+            <p id="contactList"></p>
 
-        <div id="addContactFormContainer" style="display: none;">
-
-    <h2>Add New Contact</h2>
-
-    <form id="addContactForm">
-            <div id="registerDiv">
-				<div class="form-row">
-					<p>First Name:</p>
-					<input type="text" id="firstName" placeholder="First Name" required>
-				</div>
-				<div class="form-row">
-					<p>Last Name:</p>
-					<input type="text" id="lastName" placeholder="Last Name" required>
-				</div>
-				<div class="form-row">
-					<p>Username:</p>
-					<input type="text" id="phone" placeholder="Phone" required>
-				</div>
-				<div class="form-row">
-					<p>Password:</p>
-					<input type="email" id="email" placeholder="Email" required>
-				</div>
-				<div class="form-column">
-					<button type="button" class="buttons" onclick="addContacts();">Add New Contact</button>
-					
-				</div>
-			</div>
-    </form> 
-</div>
-
-
-
-
-
-    <br> 
-    <h2>Your Contacts</h2>
-    <div class="form-row">
-    <input type="text" id="searchText" placeholder="Search Contacts..." />
-    <button type="button" id="searchButton" onclick="searchContacts();">Search Contact</button>
-    </div>
-    <span id="searchResult"></span>
-    <p id="contactList"></p>
-
-
-
-
-           
             <table border="1">
                 <thead>
                     <tr>
@@ -76,10 +62,8 @@
                     </tr>
                 </thead>
                 <tbody id="contactsTableBody">
-
                 </tbody>
             </table>
         </div>
-	</body>
-</html> 
-
+    </body>
+</html>
