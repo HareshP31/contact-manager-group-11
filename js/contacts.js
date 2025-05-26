@@ -201,7 +201,7 @@ function saveRow(contact) {
         if (resData.error) {
             alert("Error: " + resData.error);
         } else {
-           document.getElementById("saveError").innerHTML = null
+            document.getElementById("saveError").innerHTML = null;
             Object.assign(contact, updated);
             cancelRow(contact, true);
         }
@@ -223,7 +223,7 @@ function cancelRow(contact, silent = false) {
     document.getElementById("save"   + id).style.display = "none";
     document.getElementById("cancel" + id).style.display = "none";
 
-   
+   document.getElementById("saveError").innerHTML = null;
 }
 
 
