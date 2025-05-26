@@ -19,9 +19,12 @@ function doLogin()
 
 	if(login === "" || password === "")
 	{
-		document.getElementById("loginResult").innerHTML = "Please fill in both fields.";
+		document.getElementById("loginResult").innerHTML = "ERROR: Please fill in both fields.";
 		return;
 	}
+
+	const spinner = document.getElementById("spinner");
+	spinner.style.display = "block";
 
  	let tmp = {login:login,password:hash};
 	let jsonPayload = JSON.stringify( tmp );
@@ -39,10 +42,13 @@ function doLogin()
 			{
 				let jsonObject = JSON.parse( xhr.responseText );
 				userId = jsonObject.id;
+
+
 		
 				if( userId < 1 )
 				{		
-					document.getElementById("loginResult").innerHTML = jsonObject.error || "Login failed.";
+					document.getElementById("loginResult").innerHTML = jsonObject.error || "ERROR: Login failed.";
+					spinner.style.display = "none";
 					return;
 				}
 		
@@ -50,6 +56,8 @@ function doLogin()
 				lastName = jsonObject.lastName;
 
 				saveCookie();
+
+				spinner.style.display = "none";
 	
 				window.location.href = "contacts.html";
 			}
@@ -102,7 +110,7 @@ function readCookie()
 	}
 	else
 	{
-		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
+		document.getElementById("userName").innerHTML = "Welcome " + firstName + " " + lastName + "!";
 	}
 }
 
@@ -150,7 +158,7 @@ function doRegister()
 
 	if(firstName === "" || lastName === "" || login === "" || password === "")
 	{
-		document.getElementById("registerResult").innerHTML = "Please fill in all fields.";
+		document.getElementById("registerResult").innerHTML = "ERROR: Please fill in all fields.";
 		return;
 	}
 
@@ -187,6 +195,56 @@ function doRegister()
 	{
 		document.getElementById("registerResult").innerHTML = err.message;
 	}
+}
+
+function togglePasswordLogin () 
+{
+	const passwordField = document.getElementById("loginPassword");
+	const toggleButton = document.getElementById("togglePasswordButtonLogin");
+
+	if(passwordField.type === "password")
+	{
+		passwordField.type = "text";
+		toggleButton.textContent = "Hide";
+	}
+	else
+	{
+		passwordField.type = "password";
+		toggleButton.textContent = "Show";
+	}
+}
+
+function togglePasswordRegister () 
+{
+	const passwordField = document.getElementById("registerPassword");
+	const toggleButton = document.getElementById("togglePasswordButtonRegister");
+
+	if(passwordField.type === "password")
+	{
+		passwordField.type = "text";
+		toggleButton.textContent = "Hide";
+	}
+	else
+	{
+		passwordField.type = "password";
+		toggleButton.textContent = "Show";
+	}
+}
+
+function createHeart(e)
+{
+	const heart = document.createElement('div');
+	heart.classList.add('heart');
+
+	const rect = e.currentTarget.getBoundingClientRect();
+	heart.style.left = (e.clientX - rect.left) + 'px';
+	heart.style.top = (e.clientY - rect.top) + 'px';
+
+	e.currentTarget.appendChild(heart);
+
+	setTimeout(() => {
+		heart.remove();
+	}, 1500);
 }
 
 window.onload = function () 

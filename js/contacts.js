@@ -105,11 +105,11 @@ function populateContactsTable(contacts) {
             <td id="last${c.ID}">${c.LastName}</td>
             <td id="phone${c.ID}">${c.Phone}</td>
             <td id="email${c.ID}">${c.Email}</td>
-            <td>
-                <button id="edit${c.ID}">Edit</button>
-                <button id="save${c.ID}" style="display:none;">Save</button>
-                <button id="cancel${c.ID}" style="display:none;">Cancel</button>
-                <button id="delete${c.ID}">Delete</button>
+            <td id="options-row">
+                <button class="buttons" id="edit${c.ID}">Edit</button>
+                <button class="buttons" id="save${c.ID}" style="display:none;">Save</button>
+                <button class="buttons" id="cancel${c.ID}" style="display:none;">Cancel</button>
+                <button class="buttons" id="delete${c.ID}">Delete</button>
             </td>
             
                
@@ -139,16 +139,14 @@ function editRow(contact) {
           phone = document.getElementById("phone" + id),
           email = document.getElementById("email" + id);
 
-    firstName.innerHTML = `<input type="text" id="first_in${id}" value="${contact.FirstName}">`;
-    lastName.innerHTML = `<input type="text" id="last_in${id}"  value="${contact.LastName}">`;
-    phone.innerHTML = `<input type="text" id="phone_in${id}" value="${contact.Phone}">`;
-    email.innerHTML = `<input type="text" id="email_in${id}" value="${contact.Email}">`;
+    firstName.innerHTML = `<input class="editText" type="text" id="first_in${id}" value="${contact.FirstName}">`;
+    lastName.innerHTML = `<input class="editText" type="text" id="last_in${id}"  value="${contact.LastName}">`;
+    phone.innerHTML = `<input class="editText" type="text" id="phone_in${id}" value="${contact.Phone}">`;
+    email.innerHTML = `<input class="editText" type="text" id="email_in${id}" value="${contact.Email}">`;
 }
 
 function saveRow(contact) {
     const id = contact.ID;
-
-    
     const updated = {
         ID:        id,
         FirstName: document.getElementById("first_in" + id).value.trim(),
@@ -158,27 +156,27 @@ function saveRow(contact) {
     };
 
         if (updated.FirstName === "" || updated.LastName === "" || updated.Phone === "" || updated.Email === "") {
-        document.getElementById("saveError").innerHTML = "Please fill in all fields.";
+        document.getElementById("saveError").innerHTML = "ERROR: Please fill in all fields.";
         return;
     }
 
     const nameCheck = /^[a-zA-Z\s\-']+$/;
     if (!nameCheck.test(updated.FirstName) || !nameCheck.test(updated.LastName)) {
-        document.getElementById("saveError").innerHTML = "Names can only contain letters, spaces, hyphens, or apostrophes.";
+        document.getElementById("saveError").innerHTML = "ERROR: Names can only contain letters, spaces, hyphens, or apostrophes.";
         return;
     }
 
 
     const phoneCheck = /^\d{3}-\d{3}-\d{4}$/;
     if (!phoneCheck.test(updated.Phone)) {
-        document.getElementById("saveError").innerHTML = "Phone must be in the format 123-456-7890.";
+        document.getElementById("saveError").innerHTML = "ERROR: Phone must be in the format 123-456-7890.";
         return;
 }
 
 
     const emailCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailCheck.test(updated.Email)) {
-        document.getElementById("saveError").innerHTML = "Invalid email format.";
+        document.getElementById("saveError").innerHTML = "ERROR: Invalid email format.";
         return;
     }
 
@@ -262,27 +260,27 @@ function addContacts() {
 
     
     if (firstName === "" || lastName === "" || phone === "" || email === "") {
-        document.getElementById("registerResult").innerHTML = "Please fill in all fields.";
+        document.getElementById("registerResult").innerHTML = "ERROR: Please fill in all fields.";
         return;
     }
 
     const nameCheck = /^[a-zA-Z\s\-']+$/;
     if (!nameCheck.test(firstName) || !nameCheck.test(lastName)) {
-        document.getElementById("registerResult").innerHTML = "Names can only contain letters, spaces, hyphens, or apostrophes.";
+        document.getElementById("registerResult").innerHTML = "ERROR: Names can only contain letters, spaces, -, or '.";
         return;
     }
 
 
     const phoneCheck = /^\d{3}-\d{3}-\d{4}$/;
     if (!phoneCheck.test(phone)) {
-        document.getElementById("registerResult").innerHTML = "Phone must be in the format 123-456-7890.";
+        document.getElementById("registerResult").innerHTML = "ERROR: Phone must be in the format 123-456-7890.";
         return;
 }
 
 
     const emailCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailCheck.test(email)) {
-        document.getElementById("registerResult").innerHTML = "Invalid email format.";
+        document.getElementById("registerResult").innerHTML = "ERROR: Invalid email format.";
         return;
     }
 
@@ -402,7 +400,7 @@ function toggleAddContactForm() {
 }
 
 function lastNameCheck(){
-        const srch = document.getElementById("searchText").value.trim();
+    const srch = document.getElementById("searchText").value.trim();
     const userId = getUserIdFromCookie();
     
     if (!userId) {
@@ -410,25 +408,11 @@ function lastNameCheck(){
         return;
     }
 
-    let flag = 0;
-    let payload = { id: userId };
+    const payload = {
+        id: userId,
+        lastName: srch
+    };
 
-    if (srch.includes("@")) {
-        payload.email = srch;
-    } else if (/^[\d\-\+\(\)\s]+$/.test(srch)) {
-        payload.phone = srch;
-    } else {
-        const words = srch.split(" ").filter(word => word.trim() !== "");
-        if (words.length === 2) {
-            payload.firstName = words[0];
-            payload.lastName = words[1];
-        } else {
-            payload.lastName = srch;
-           
-        }
-    }
-
-    do {
     fetch("https://meowmanager4331.xyz/LAMPAPI/SearchContacts.php", {
         method: "POST",
         headers: {
@@ -437,11 +421,6 @@ function lastNameCheck(){
         body: JSON.stringify(payload)
     })
     .then(response => {
-        if ((response.status === 204) && flag == 1) {
-            payload.firstName = null;
-            payload.lastName = lastName;
-           
-        }
         if (response.status === 204) {
             populateContactsTable([]);
             return;
@@ -465,6 +444,4 @@ function lastNameCheck(){
     .catch(error => {
         console.error("Search error:", error);
     });
-    
-    } while (flag == 2)
 }

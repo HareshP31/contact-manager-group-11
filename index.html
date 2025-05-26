@@ -5,6 +5,7 @@
 		<script type="text/javascript" src="js/md5.js"></script>
 		<link href="css/styles.css" rel="stylesheet">
 		<link rel="icon" href="images/cat-face.png" type="image/png">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
 			<div id="bodyDiv">
@@ -13,7 +14,7 @@
 				<h2>Welcome!</h2>
 				<h2>Login/Register to keep track of your furry friends!</h2>
 			</div>
-			
+
 			<div id="formToggle">
 				<div id="loginTab" class="form-tab active" onclick="showForm('login')">Login</div>
 				<div id="registerTab" class="form-tab" onclick="showForm('register')">Register</div>
@@ -27,10 +28,18 @@
 				<div class="form-row">
 					<p>Password:</p>
 					<input required type="password" id="loginPassword" placeholder="Enter password here..."/>
+					<button type="button" onclick="togglePasswordLogin()" id="togglePasswordButtonLogin">Show</button>
 				</div>
 				<div class="form-column">
-					<button type="button" class="buttons" onclick="doLogin();">LOGIN</button>
+					<button type="button" class="buttons" id="loginButton" onclick="doLogin();">LOGIN</button>
 					<span id="loginResult"></span>
+				</div>
+				<div id="spinner" style="display: none;">
+					<div class="loading"></div>
+				</div>
+				<div id="blackCatRow">
+					<div id="blackCatImage" onclick="createHeart(event)"></div>
+					<h3>- Pet Me!</h3>
 				</div>
 			</div>
 
@@ -50,6 +59,7 @@
 				<div class="form-row">
 					<p>Password:</p>
 					<input required type="password" id="registerPassword" placeholder="Enter a password..."/>
+					<button type="button" onclick="togglePasswordRegister()" id="togglePasswordButtonRegister">Show</button>
 				</div>
 				<div class="form-column">
 					<button type="button" class="buttons" onclick="doRegister();">REGISTER</button>

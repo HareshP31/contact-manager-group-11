@@ -8,11 +8,13 @@
     </head>
     <body>
         <div id="bodyDiv">
-            <button type="button" id="loginButton" class="buttons" onclick="doLogout();">LOGOUT</button>
-            <h2 id="userName"></h2>
-            <h1>YOU ARE LOGGED IN</h1>
+            <div id="logged-in-header">
+                <h2 id="userName"></h2>
+                <button type="button" id="loginButton" class="buttons" onclick="doLogout();">LOGOUT</button>
+            </div>
 
-            <button type="button" class="buttons" id="toggleFormButton" style="margin-bottom: 15px;">Show Add Contact Form</button>
+
+            <button type="button" class="buttons" id="toggleFormButton">Show Add Contact Form</button>
 
             <div id="addContactFormContainer" style="display: none;">
                 <div class="form-column">
@@ -33,7 +35,7 @@
                             <input type="text" id="phone" placeholder="Phone" required>
                         </div>
                         <div class="form-row">
-                            <p>Password:</p>
+                            <p>Email:</p>
                             <input type="email" id="email" placeholder="Email" required>
                         </div>
                         <div class="form-column">
@@ -48,27 +50,29 @@
             </div>
 
             <br> 
-            <h2>Your Contacts</h2>
             <div class="form-row">
-                <input type="text" id="searchText" placeholder="Search Contacts..." />
-                <button type="button" id="searchButton" onclick="searchContacts();">Search Contact</button>
+                <h1>Search Your Contacts</h1>
+                <input type="text" id="searchText" placeholder="Begin typing..." />
             </div>
             <span id="searchResult"></span>
             <p id="contactList"></p>
-             <span id="saveError"></span>
-            <table border="1">
-                <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Options</th>
-                    </tr>
-                </thead>
-                <tbody id="contactsTableBody">
-                </tbody>
-            </table>
+            <span id="saveError"></span>
+            <h1>Your Contacts</h1>
+            <div id="table-mobile">
+                <table id="contactsTable" border="1">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contactsTableBody">
+                    </tbody>
+                </table>
+            </div>
         </div>
     </body>
 </html>
