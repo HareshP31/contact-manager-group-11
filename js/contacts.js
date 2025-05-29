@@ -70,6 +70,7 @@ function fetchContacts() {
     })
     .catch(error => {
         console.error("Fetch error:", error);
+        populateContactsTable([]);
     });
 }
 
