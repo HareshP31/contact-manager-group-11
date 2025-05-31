@@ -13,7 +13,6 @@ function doLogin()
 	
 	let login = document.getElementById("loginName").value;
 	let password = document.getElementById("loginPassword").value;
- 	let hash = md5( password );
 	
 	document.getElementById("loginResult").innerHTML = "";
 
@@ -26,7 +25,7 @@ function doLogin()
 	const spinner = document.getElementById("spinner");
 	spinner.style.display = "block";
 
- 	let tmp = {login:login,password:hash};
+ 	let tmp = {login:login,password:password};
 	let jsonPayload = JSON.stringify( tmp );
 	
 	let url = urlBase + '/Login.' + extension;
@@ -154,7 +153,6 @@ function doRegister()
 	let lastName = document.getElementById("lastName").value;
 	let login = document.getElementById("registerName").value;
 	let password = document.getElementById("registerPassword").value;
-	let hash = md5(password);
 
 	if(firstName === "" || lastName === "" || login === "" || password === "")
 	{
@@ -162,7 +160,7 @@ function doRegister()
 		return;
 	}
 
-	let tmp = { firstName, lastName, login, password: hash };
+	let tmp = { firstName, lastName, login, password };
 	let jsonPayload = JSON.stringify(tmp);
 
 	let url = urlBase + '/Register.' + extension;
