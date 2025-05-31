@@ -41,6 +41,7 @@ function fetchContacts() {
         limit: 10
     });
 
+    // fetch API
     fetch("https://meowmanager4331.xyz/LAMPAPI/FetchContacts.php", {
         method: "POST",
         headers: {
@@ -98,6 +99,7 @@ function populateContactsTable(contacts) {
         return;
     }
 
+    // Create table
     for (const c of contacts) {
         const row = document.createElement("tr");
         row.id = "row" + c.ID;
@@ -306,7 +308,6 @@ function addContacts() {
         if (data.error) {
             alert("Error: " + data.error);
         } else {
-            alert("Contact added successfully!");
             fetchContacts();
         }
     })
