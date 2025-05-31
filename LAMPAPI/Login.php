@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $inData = getRequestInfo();
 
-$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331"); 	
+$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
 if ($conn->connect_error) {
     returnWithError($conn->connect_error);
     exit();
@@ -21,12 +21,15 @@ if (!$stmt) {
     returnWithError("Database prepare failed: " . $conn->error);
     exit();
 }
+
 $stmt->bind_param("s", $inData["login"]);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($row = $result->fetch_assoc()) {
-    if (password_verify($inData["password"], $row["Password"])) {
+    // Hash input password with MD5 and compare
+    $inputPasswordHash = md5($inData["password"]);
+    if ($inputPasswordHash === $row["Password"]) {
         returnWithInfo($row["FirstName"], $row["LastName"], $row["ID"]);
     } else {
         returnWithError("Incorrect username or password.");

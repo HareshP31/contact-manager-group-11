@@ -33,8 +33,8 @@ if ($result->fetch_assoc()) {
 }
 $stmt->close();
 
-// Insert new user
-$hashedPassword = password_hash($inData["password"], PASSWORD_DEFAULT);
+// Hash password using MD5
+$hashedPassword = md5($inData["password"]);
 
 $stmt = $conn->prepare("INSERT INTO Users (Login, Password, FirstName, LastName) VALUES (?, ?, ?, ?)");
 if (!$stmt) {
@@ -44,8 +44,9 @@ if (!$stmt) {
 $stmt->bind_param("ssss", $inData["login"], $hashedPassword, $inData["firstName"], $inData["lastName"]);
 
 if ($stmt->execute()) {
-    // Return something similar to login success (id is last insert id)
-    returnWithInfo($inData["firstName"], $inData["lastName"], $stmt->insert_id);
+    // Use $conn->insert_id to get the new user's ID
+    $newUserId = $conn->insert_id;
+    returnWithInfo($inData["firstName"], $inData["lastName"], $newUserId);
 } else {
     returnWithError("Error registering user: " . $stmt->error);
 }
