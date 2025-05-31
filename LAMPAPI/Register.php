@@ -35,8 +35,11 @@
 	$stmt->close();
 
 	//	Insert new user
+	$hashedPassword = password_hash($inData["password"], PASSWORD_DEFAULT);
+
 	$stmt = $conn->prepare("INSERT INTO Users (Login, Password, FirstName, LastName) VALUES (?, ?, ?, ?)");
-	$stmt->bind_param("ssss", $inData["login"], $inData["password"], $inData["firstName"], $inData["lastName"]);
+	$stmt->bind_param("ssss", $inData["login"], $hashedPassword, $inData["firstName"], $inData["lastName"]);
+
 
 	if ($stmt->execute())
 	{

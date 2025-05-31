@@ -30,8 +30,10 @@
 
 		if ($row = $result->fetch_assoc())
 		{
-			if (password_verify($password, $row["password"])) {
-				returnWithInfo($row["firstName"], $row["lastName"], $row["ID"]);
+			 $inputPassword = $inData["password"];
+			
+			if (password_verify($inputPassword, $row["Password"])) {
+				returnWithInfo($row["FirstName"], $row["LastName"], $row["ID"]);
 			} else {
 				returnWithError("Incorrect username or password.");
 			}
