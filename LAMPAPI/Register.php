@@ -1,4 +1,5 @@
 <?php
+// for testing
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -16,7 +17,7 @@ if ($conn->connect_error) {
     exit();
 }
 
-// Check if login already exists
+
 $stmt = $conn->prepare("SELECT ID FROM Users WHERE Login = ?");
 if (!$stmt) {
     returnWithError("Database prepare failed: " . $conn->error);
@@ -33,7 +34,7 @@ if ($result->fetch_assoc()) {
 }
 $stmt->close();
 
-// Hash password using MD5
+// password hashing
 $hashedPassword = md5($inData["password"]);
 
 $stmt = $conn->prepare("INSERT INTO Users (Login, Password, FirstName, LastName) VALUES (?, ?, ?, ?)");
@@ -44,7 +45,6 @@ if (!$stmt) {
 $stmt->bind_param("ssss", $inData["login"], $hashedPassword, $inData["firstName"], $inData["lastName"]);
 
 if ($stmt->execute()) {
-    // Use $conn->insert_id to get the new user's ID
     $newUserId = $conn->insert_id;
     returnWithInfo($inData["firstName"], $inData["lastName"], $newUserId);
 } else {

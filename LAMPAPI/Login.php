@@ -1,4 +1,5 @@
 <?php
+// for testing
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -27,7 +28,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($row = $result->fetch_assoc()) {
-    // Hash input password with MD5 and compare
+    // password hashing
     $inputPasswordHash = md5($inData["password"]);
     if ($inputPasswordHash === $row["Password"]) {
         returnWithInfo($row["FirstName"], $row["LastName"], $row["ID"]);

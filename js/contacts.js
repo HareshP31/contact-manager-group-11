@@ -323,6 +323,7 @@ function addContacts() {
     toggleAddContactForm();
 }
 
+// search with first or last name
 function searchContacts() {
     const srch = document.getElementById("searchText").value.trim();
     const userId = getUserIdFromCookie();
@@ -401,6 +402,7 @@ function toggleAddContactForm() {
     document.getElementById("registerResult").innerHTML = null;
 }
 
+// for last name search
 function lastNameCheck(){
     const srch = document.getElementById("searchText").value.trim();
     const userId = getUserIdFromCookie();

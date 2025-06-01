@@ -130,6 +130,8 @@ function showForm(form)
 	const registerTab = document.getElementById("registerTab");
 	const loginDiv = document.getElementById("loginDiv");
 	const registerDiv = document.getElementById("registerDiv");
+	
+	if (!loginTab || !registerTab || !loginDiv || !registerDiv) return;
 
 	if(form === "login")
 	{
