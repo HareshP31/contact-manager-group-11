@@ -494,20 +494,6 @@ function lastNameCheck(){
     });
 }
 
-function nextPage() {
-    currentPage++;
-    fetchContacts(currentPage);
-    updatePageIndicator();
-}
-
-function prevPage() {
-    if (currentPage > 0) {
-        currentPage--;
-        fetchContacts(currentPage);
-        updatePageIndicator();
-    }
-}
-
 function updatePageIndicator() {
     document.getElementById("pageIndicator").textContent = `Page ${currentPage + 1}`;
 }
