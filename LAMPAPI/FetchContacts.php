@@ -37,7 +37,7 @@
          ORDER BY ID DESC 
          LIMIT ? OFFSET ?"
     );
-    $stmt->bind_param("ii", $userID, $limit, $offset);
+    $stmt->bind_param("iii", $userID, $limit, $offset);
     //  Execute fetch
     if (!$stmt->execute())
     {

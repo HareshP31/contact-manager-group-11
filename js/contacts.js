@@ -5,8 +5,32 @@ const CONTACTS_PER_PAGE = 10;
 
 document.addEventListener('DOMContentLoaded', function () {
     readCookie();
-    fetchContacts(currentPage);
-    updatePageIndicator();
+    fetchContacts(currentPage, (count) => {
+        updatePaginationButtons(count === CONTACTS_PER_PAGE);
+        updatePageIndicator();
+    });
+
+    document.getElementById('prevPage').addEventListener('click', () => {
+        if (currentPage > 0) {
+            currentPage--;
+            fetchContacts(currentPage, (count) => {
+                updatePaginationButtons(count === CONTACTS_PER_PAGE);
+                updatePageIndicator();
+            });
+        }
+    });
+
+    document.getElementById('nextPage').addEventListener('click', () => {
+        currentPage++;
+        fetchContacts(currentPage, (count) => {
+            if (count < CONTACTS_PER_PAGE) {
+                updatePaginationButtons(false);
+            } else {
+                updatePaginationButtons(true);
+            }
+            updatePageIndicator();
+        });
+    });
 
     const searchInput = document.getElementById('searchText');
     searchInput.addEventListener('input', handleSearchInput);
@@ -23,16 +47,21 @@ function handleSearchInput() {
     
     // Set a new timeout
     searchTimeout = setTimeout(() => {
+        currentPage = 0;
         const searchValue = document.getElementById('searchText').value.trim();
         if (searchValue === '') {
-            fetchContacts(); // Show all contacts when search is empty
+            // Show all contacts when search is empty
+            fetchContacts(currentPage, (count) => {
+            updatePaginationButtons(count === CONTACTS_PER_PAGE);
+            updatePageIndicator();
+            });
         } else {
-            searchContacts();
+            searchContacts(searchValue);
         }
     }, DEBOUNCE_DELAY);
 }
 
-function fetchContacts(page = 0) {
+function fetchContacts(page = 0, callback = null) {
     const userId = getUserIdFromCookie();
     if (!userId) {
         alert("You must be logged in.");
@@ -73,11 +102,13 @@ function fetchContacts(page = 0) {
             alert("Error: " + data.error);
         } else {
             populateContactsTable(data);
+            if (callback) callback(data.length);
         }
     })
     .catch(error => {
         console.error("Fetch error:", error);
         populateContactsTable([]);
+        if (callback) callback(0);
     });
 }
 
@@ -248,7 +279,10 @@ function deleteContact(contact) {
         if (resData.error) {
             alert("Error: " + resData.error);
         } else {
-            fetchContacts();
+            fetchContacts(currentPage, (count) => {
+            updatePaginationButtons(count === CONTACTS_PER_PAGE);
+            updatePageIndicator();
+            });
         }
     })
     .catch(err => console.error("Delete failed:", err));
@@ -314,7 +348,10 @@ function addContacts() {
         if (data.error) {
             alert("Error: " + data.error);
         } else {
-            fetchContacts();
+            fetchContacts(currentPage, (count) => {
+            updatePaginationButtons(count === CONTACTS_PER_PAGE);
+            updatePageIndicator();
+            });
         }
     })
     .catch(error => {
@@ -472,4 +509,13 @@ function prevPage() {
 
 function updatePageIndicator() {
     document.getElementById("pageIndicator").textContent = `Page ${currentPage + 1}`;
+}
+
+function updatePaginationButtons(hasNextPage) {
+    const prevBtn = document.getElementById('prevPage');
+    const nextBtn = document.getElementById('nextPage');
+
+    prevBtn.disabled = currentPage === 0;
+
+    nextBtn.disabled = !hasNextPage;
 }
