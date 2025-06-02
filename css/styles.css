@@ -280,11 +280,10 @@ body
 
 	.form-row {
 		flex-direction: column;
-		align-items: flex-start;
 	}
 
 	.form-row p {
-		width: auto;
+		width: 200px;
 		text-align: left;
 		padding: 5px 0;
 	}
@@ -294,10 +293,11 @@ body
 	#phone, #email,
 	#registerName, #registerPassword {
 		width: 100%;
-		max-width: 100%;
+		max-width: 300px;
 	}
 
 	.buttons {
+		max-width: 100px;
 		width: 100%;
 		font-size: 14px;
 	}
@@ -339,6 +339,10 @@ body
 	#contactsTable {
     	font-size: 12px;
   	}
+
+	#registerDiv {
+		width: 200px;
+	}
 }
 
 input 
