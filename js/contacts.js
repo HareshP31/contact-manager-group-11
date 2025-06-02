@@ -94,12 +94,13 @@ function fetchContacts(page = 0, callback = null) {
         return response.text();
     })
     .then(text => {
+        if (Array.isArray(text)) return text;
         if (!text) return [];
         return JSON.parse(text);
     })
     .then(data => {
-        if (data.error) {
-            alert("Error: " + data.error);
+        if (!Array.isArray(data)) {
+            alert("Error: " + (data.error || "Unexpected response format"));
         } else {
             populateContactsTable(data);
             if (callback) callback(data.length);
