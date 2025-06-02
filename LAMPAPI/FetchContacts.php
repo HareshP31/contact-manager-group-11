@@ -19,6 +19,8 @@
     $limit = isset($inData["limit"]) ? intval($inData["limit"]) : LIMIT;
     $limit = ($limit > LIMIT) ? LIMIT : $limit;
 
+    $offset = isset($inData["offset"]) ? intval($inData["offset"]) : 0;
+
     //  Establish mysql connection
     $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
     if ($conn->connect_error)
@@ -33,9 +35,9 @@
          FROM Contacts 
          WHERE UserID = ? 
          ORDER BY ID DESC 
-         LIMIT ?"
+         LIMIT ? OFFSET ?"
     );
-    $stmt->bind_param("ii", $userID, $limit);
+    $stmt->bind_param("ii", $userID, $limit, $offset);
     //  Execute fetch
     if (!$stmt->execute())
     {

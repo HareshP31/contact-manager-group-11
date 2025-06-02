@@ -1,9 +1,12 @@
 let searchTimeout = null;
 const DEBOUNCE_DELAY = 300;
+let currentPage = 0;
+const CONTACTS_PER_PAGE = 10;
 
 document.addEventListener('DOMContentLoaded', function () {
     readCookie();
-    fetchContacts();
+    fetchContacts(currentPage);
+    updatePageIndicator();
 
     const searchInput = document.getElementById('searchText');
     searchInput.addEventListener('input', handleSearchInput);
@@ -29,16 +32,19 @@ function handleSearchInput() {
     }, DEBOUNCE_DELAY);
 }
 
-function fetchContacts() {
+function fetchContacts(page = 0) {
     const userId = getUserIdFromCookie();
     if (!userId) {
         alert("You must be logged in.");
         return;
     }
 
+    const offset = page * CONTACTS_PER_PAGE;
+
     const payload = JSON.stringify({
         id: userId,
-        limit: 10
+        limit: CONTACTS_PER_PAGE,
+        offset: offset
     });
 
     // fetch API
@@ -448,4 +454,22 @@ function lastNameCheck(){
     .catch(error => {
         console.error("Search error:", error);
     });
+}
+
+function nextPage() {
+    currentPage++;
+    fetchContacts(currentPage);
+    updatePageIndicator();
+}
+
+function prevPage() {
+    if (currentPage > 0) {
+        currentPage--;
+        fetchContacts(currentPage);
+        updatePageIndicator();
+    }
+}
+
+function updatePageIndicator() {
+    document.getElementById("pageIndicator").textContent = `Page ${currentPage + 1}`;
 }
