@@ -1,4 +1,5 @@
 <?php
+// REMOVE AFTER TESTING
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -8,19 +9,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// max contacts to fetch
 define("LIMIT", 10);
 
+// get json data
 $inData = getRequestInfo();
 $userID = intval($inData["id"]);
 $limit = isset($inData["limit"]) ? min(intval($inData["limit"]), LIMIT) : LIMIT;
 $offset = isset($inData["offset"]) ? intval($inData["offset"]) : 0;
 
+// mysql connection
 $conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
 if ($conn->connect_error) {
     returnWithError($conn->connect_error, 500);
     exit();
 }
 
+// prepare statement
 $stmt = $conn->prepare(
     "SELECT FirstName, LastName, Phone, Email, ID 
      FROM Contacts 
@@ -33,6 +38,7 @@ $stmt->bind_param("iii", $userID, $limit, $offset);
 if (!$stmt->execute()) {
     returnWithError("Query failed: " . $stmt->error, 500);
 } else {
+    // retrieve contacts
     $result = $stmt->get_result();
     $contacts = [];
 
@@ -47,6 +53,7 @@ if (!$stmt->execute()) {
     }
 }
 
+// close mysql
 $stmt->close();
 $conn->close();
 
@@ -64,6 +71,7 @@ function returnWithError($err, $statusCode = 400) {
     sendResultInfoAsJson(['error' => $err]);
 }
 
+// php data
 function returnWithInfo($data = null, $statusCode = 200) {
     http_response_code($statusCode);
     if ($statusCode === 204) return;

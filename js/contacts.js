@@ -210,14 +210,14 @@ function saveRow(contact) {
 
     const phoneCheck = /^\d{3}-\d{3}-\d{4}$/;
     if (!phoneCheck.test(updated.Phone)) {
-        document.getElementById("saveError").innerHTML = "ERROR: Phone must be in the format 123-456-7890.";
+        document.getElementById("saveError").innerHTML = "ERROR: Phone must be in the format XXX-XXX-XXXX.";
         return;
 }
 
 
-    const emailCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailCheck = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{3}$/;
     if (!emailCheck.test(updated.Email)) {
-        document.getElementById("saveError").innerHTML = "ERROR: Invalid email format.";
+        document.getElementById("saveError").innerHTML = "ERROR: Invalid email format. Example: email@mail.com";
         return;
     }
 
@@ -317,14 +317,14 @@ function addContacts() {
 
     const phoneCheck = /^\d{3}-\d{3}-\d{4}$/;
     if (!phoneCheck.test(phone)) {
-        document.getElementById("registerResult").innerHTML = "ERROR: Phone must be in the format 123-456-7890.";
+        document.getElementById("registerResult").innerHTML = "ERROR: Phone must be in the format XXX-XXX-XXXX.";
         return;
 }
 
 
-    const emailCheck = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailCheck = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{3}$/;
     if (!emailCheck.test(email)) {
-        document.getElementById("registerResult").innerHTML = "ERROR: Invalid email format.";
+        document.getElementById("registerResult").innerHTML = "ERROR: Invalid email format. Example: email@mail.com";
         return;
     }
 

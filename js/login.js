@@ -162,6 +162,15 @@ function doRegister()
 		return;
 	}
 
+	const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+	if (!passwordRegex.test(password)) {
+		document.getElementById("registerResult").innerHTML = "ERROR: Password must be at least 8 characters long and include at least 1 number and 1 special character.";
+		return;
+	}
+
+	const spinner = document.getElementById("spinner");
+	spinner.style.display = "block";
+
 	let tmp = { firstName, lastName, login, password };
 	let jsonPayload = JSON.stringify(tmp);
 
@@ -177,6 +186,7 @@ function doRegister()
 		{
 			if(this.readyState == 4 && this.status == 200)
 			{
+				spinner.style.display = "none";
 				let response = JSON.parse(xhr.responseText);
 				if(response.error)
 				{
@@ -185,7 +195,9 @@ function doRegister()
 				else
 				{
 					document.getElementById("registerResult").innerHTML = "Registration successful! Please log in.";
-					showForm("login");
+					setTimeout(() => {					
+						showForm("login");
+					}, 2000);
 				}
 			}
 		};
@@ -193,6 +205,7 @@ function doRegister()
 	}
 	catch (err)
 	{
+		spinner.style.display = "none";
 		document.getElementById("registerResult").innerHTML = err.message;
 	}
 }
